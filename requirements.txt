@@ -1,6 +1,1 @@
 Flask
-google-generativeai
-Flask-Cors
-gunicorn
-gevent>=1.4
-
