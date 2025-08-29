@@ -1,5 +1,5 @@
 # app.py
-print("Application is starting...")  # Debug statement added here
+print("Application is starting...")  # Debug statement to see if the app starts
 
 from flask import Flask, request, jsonify
 import google.generativeai as genai
@@ -7,7 +7,11 @@ import os
 from flask_cors import CORS
 
 # Configure the Gemini API key from an environment variable
-genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
+try:
+    genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
+    print(f"Gemini API key is set: {os.environ.get('GEMINI_API_KEY') is not None}")
+except Exception as e:
+    print(f"Error configuring Gemini API: {e}") # This will catch and print the specific error
 
 app = Flask(__name__)
 # CORS is needed to allow your frontend to talk to your backend
@@ -15,7 +19,7 @@ CORS(app)
 
 @app.route('/api/check_grammar', methods=['POST'])
 def check_grammar():
-    print("Received request to check grammar...")  # Debug statement added here
+    print("Received request to check grammar...")  # Debug statement to see if the request gets here
     try:
         data = request.get_json()
         user_text = data.get('text', '')
@@ -49,6 +53,7 @@ def check_grammar():
         return jsonify({"analysis": response_text})
 
     except Exception as e:
+        print(f"An error occurred during API call: {e}")
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
